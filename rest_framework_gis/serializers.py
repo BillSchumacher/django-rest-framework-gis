@@ -44,14 +44,11 @@ class GeoFeatureModelSerializer(ModelSerializer):
     @classmethod
     def many_init(cls, *args, **kwargs):
         child_serializer = cls(*args, **kwargs)
-        list_kwargs = {'child': child_serializer}
-        list_kwargs.update(
-            {
-                key: value
-                for key, value in kwargs.items()
-                if key in LIST_SERIALIZER_KWARGS
-            }
-        )
+        list_kwargs = {'child': child_serializer} | {
+            key: value
+            for key, value in kwargs.items()
+            if key in LIST_SERIALIZER_KWARGS
+        }
         meta = getattr(cls, 'Meta', None)
         list_serializer_class = getattr(
             meta, 'list_serializer_class', GeoFeatureModelListSerializer
